@@ -1,0 +1,10 @@
+period,model,forecast_horizon,sample_count,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples,period_start,period_end
+March–May 2020,Persistence (t-1),1-step ahead (rolling H=1),2208,4.7763,13.4222,57.97,42.54,1728,2020-03-01 00:00:00+00:00,2020-05-31 23:00:00+00:00
+March–May 2020,Seasonal Naive (t-24),1-step ahead (rolling H=1),2208,8.5899,17.4215,109.31,97.77,1728,2020-03-01 00:00:00+00:00,2020-05-31 23:00:00+00:00
+March–May 2020,Seasonal Naive (t-168),1-step ahead (rolling H=1),2208,9.2918,17.8287,128.14,104.59,1728,2020-03-01 00:00:00+00:00,2020-05-31 23:00:00+00:00
+June–August 2020,Persistence (t-1),1-step ahead (rolling H=1),2208,7.939,12.5618,54.56,38.24,2161,2020-06-01 00:00:00+00:00,2020-08-31 23:00:00+00:00
+June–August 2020,Seasonal Naive (t-24),1-step ahead (rolling H=1),2208,12.3917,17.0993,97.44,68.51,2161,2020-06-01 00:00:00+00:00,2020-08-31 23:00:00+00:00
+June–August 2020,Seasonal Naive (t-168),1-step ahead (rolling H=1),2208,11.8815,16.7024,88.57,67.19,2161,2020-06-01 00:00:00+00:00,2020-08-31 23:00:00+00:00
+September–December 2020,Persistence (t-1),1-step ahead (rolling H=1),2284,9.5593,16.95,49.36,35.82,2155,2020-09-01 00:00:00+00:00,2020-12-05 03:00:00+00:00
+September–December 2020,Seasonal Naive (t-24),1-step ahead (rolling H=1),2284,14.1229,21.3129,83.56,63.49,2155,2020-09-01 00:00:00+00:00,2020-12-05 03:00:00+00:00
+September–December 2020,Seasonal Naive (t-168),1-step ahead (rolling H=1),2284,14.3209,21.5728,84.95,64.62,2155,2020-09-01 00:00:00+00:00,2020-12-05 03:00:00+00:00

@@ -1,0 +1,7 @@
+horizon,evaluation_type,model,forecast_windows,evaluated_hours,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples
+H=24 (Day-Ahead),Rolling Daily Origin (00:00 UTC),Persistence (Flat H=24),279,6696,22.342,34.0593,316.05,91.89,6044
+H=24 (Day-Ahead),Rolling Daily Origin (00:00 UTC),Seasonal Naive (Diurnal H=24),279,6696,11.7359,18.7466,95.89,76.45,6044
+H=24 (Day-Ahead),Rolling Daily Origin (00:00 UTC),Seasonal Naive (Weekly H=24),279,6696,11.8563,18.8486,98.59,78.57,6044
+H=168 (Week-Ahead),Rolling Weekly Origin,Persistence (Flat H=168),39,6552,22.8355,28.6441,340.28,95.29,5965
+H=168 (Week-Ahead),Rolling Weekly Origin,Seasonal Naive (Diurnal Tiled H=168),39,6552,12.2204,18.5887,105.68,79.08,5965
+H=168 (Week-Ahead),Rolling Weekly Origin,Seasonal Naive (Weekly Cycle H=168),39,6552,11.8624,18.8333,98.48,78.05,5965

@@ -1,0 +1,7 @@
+model,split,forecast_horizon,sample_count,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples,evaluation_start,evaluation_end,description
+Persistence (t-1),Validation,1-hour ahead (rolling H=1),1440,6.0736,9.9767,35.7,31.19,1335,2020-01-01T00:00:00+00:00,2020-02-29T23:00:00+00:00,Last observed value from 1 hour prior (H=1)
+Seasonal Naive (t-24),Validation,1-hour ahead (rolling H=1),1440,12.54,18.9275,93.38,68.62,1335,2020-01-01T00:00:00+00:00,2020-02-29T23:00:00+00:00,"Value from exactly 24 hours prior (diurnal lag, H=1)"
+Seasonal Naive (t-168),Validation,1-hour ahead (rolling H=1),1440,12.319,18.4526,76.14,70.86,1335,2020-01-01T00:00:00+00:00,2020-02-29T23:00:00+00:00,"Value from exactly 168 hours prior (weekly lag, H=1)"
+Persistence (t-1),Test,1-hour ahead (rolling H=1),6700,7.4491,14.4677,53.68,38.83,6044,2020-03-01T00:00:00+00:00,2020-12-05T03:00:00+00:00,Last observed value from 1 hour prior (H=1)
+Seasonal Naive (t-24),Test,1-hour ahead (rolling H=1),6700,11.729,18.741,95.89,76.44,6044,2020-03-01T00:00:00+00:00,2020-12-05T03:00:00+00:00,"Value from exactly 24 hours prior (diurnal lag, H=1)"
+Seasonal Naive (t-168),Test,1-hour ahead (rolling H=1),6700,11.8596,18.8504,98.59,78.64,6044,2020-03-01T00:00:00+00:00,2020-12-05T03:00:00+00:00,"Value from exactly 168 hours prior (weekly lag, H=1)"
