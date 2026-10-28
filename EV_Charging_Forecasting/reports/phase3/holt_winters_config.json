@@ -1,0 +1,25 @@
+{
+  "model_name": "Holt-Winters Exponential Smoothing",
+  "selected_configuration": {
+    "name": "HW_DampedTrend_AddSeason24",
+    "trend": "add",
+    "seasonal": "add",
+    "damped_trend": true,
+    "seasonal_periods": 24
+  },
+  "fitted_parameters": {
+    "smoothing_level": 0.9196862088352236,
+    "smoothing_trend": 0.0,
+    "smoothing_seasonal": 0.08031379116477644,
+    "damping_trend": 0.8217470062685477,
+    "initial_level": 15.158664551334436,
+    "initial_trend": 0.8897833418539891,
+    "use_boxcox": 0.0,
+    "remove_bias": 0.0
+  },
+  "target_variable": "avg_power_kw (reconstructed hourly energy allocation; not instantaneous physical power)",
+  "energy_cap_note": "7.7 kW per-session provisional cap applied during v2 preprocessing",
+  "train_range": "2018-05-01 00:00 to 2019-12-31 23:00 UTC",
+  "validation_range": "2020-01-01 00:00 to 2020-02-29 23:00 UTC",
+  "test_range": "2020-03-01 00:00 to 2020-12-05 03:00 UTC"
+}

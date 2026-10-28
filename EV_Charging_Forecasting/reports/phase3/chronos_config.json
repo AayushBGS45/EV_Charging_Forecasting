@@ -1,0 +1,10 @@
+{
+  "model_name": "Chronos Foundation Time Series Model",
+  "hf_model_id": "amazon/chronos-t5-tiny",
+  "selected_context_length_hours": 504,
+  "target_variable": "avg_power_kw (reconstructed hourly energy allocation; not instantaneous physical power)",
+  "energy_cap_note": "7.7 kW per-session provisional cap applied during v2 preprocessing",
+  "train_range": "2018-05-01 00:00 to 2019-12-31 23:00 UTC",
+  "validation_range": "2020-01-01 00:00 to 2020-02-29 23:00 UTC",
+  "test_range": "2020-03-01 00:00 to 2020-12-05 03:00 UTC"
+}

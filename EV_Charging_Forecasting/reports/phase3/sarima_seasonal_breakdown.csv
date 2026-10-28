@@ -1,0 +1,7 @@
+model,task,period,n_samples,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples
+SARIMA,Day-Ahead (H=24),March–May 2020,2208,5.6631,9.455,98.12,83.45,1726
+SARIMA,Day-Ahead (H=24),June–August 2020,2208,5.423,7.3453,53.18,46.16,2161
+SARIMA,Day-Ahead (H=24),September–December 2020,2280,6.6197,8.5969,54.23,46.95,2155
+SARIMA,Rolling 1-Step (H=1),March–May 2020,2208,2.8671,4.7501,50.73,61.8,1726
+SARIMA,Rolling 1-Step (H=1),June–August 2020,2208,3.5075,4.947,31.5,30.31,2161
+SARIMA,Rolling 1-Step (H=1),September–December 2020,2284,4.0339,5.5779,29.54,31.74,2155

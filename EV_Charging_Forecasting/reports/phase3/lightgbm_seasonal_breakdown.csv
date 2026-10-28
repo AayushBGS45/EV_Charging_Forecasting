@@ -1,0 +1,7 @@
+mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples,total_samples,model,task,period
+6.6552,10.013,129.79,85.38,1726,2208,LightGBM GBDT,Day-Ahead (H=24),March–May 2020
+6.4056,8.6224,64.65,47.64,2161,2208,LightGBM GBDT,Day-Ahead (H=24),June–August 2020
+6.9777,9.1688,52.16,48.23,2155,2280,LightGBM GBDT,Day-Ahead (H=24),September–December 2020
+2.6803,4.6485,44.19,56.85,1726,2208,LightGBM GBDT,Rolling 1-Step (H=1),March–May 2020
+3.5856,5.103,31.78,28.15,2161,2208,LightGBM GBDT,Rolling 1-Step (H=1),June–August 2020
+3.9761,5.6051,27.93,26.68,2155,2284,LightGBM GBDT,Rolling 1-Step (H=1),September–December 2020

@@ -1,0 +1,3 @@
+model,task,split,n_samples,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples,config_name
+Chronos (chronos-t5-tiny),Day-Ahead (H=24),Test,6696,5.8676,8.7159,58.46,61.2,6042,chronos_tiny_ctx504
+Chronos (chronos-t5-tiny),Rolling 1-Step (H=1),Test,6700,3.3335,5.0997,31.28,31.88,6042,chronos_tiny_ctx504

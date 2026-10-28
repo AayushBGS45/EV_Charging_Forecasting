@@ -1,0 +1,15 @@
+model,task,split,n_samples,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples,config_name
+Chronos (chronos-t5-tiny),Day-Ahead (H=24),Test,6696,5.8676,8.7159,58.46,61.2,6042,chronos_tiny_ctx504
+SARIMA,Day-Ahead (H=24),Test,6696,5.9097,8.5109,66.4,58.73,6042,"SARIMA(2,0,1)x(0,1,1,24)"
+LightGBM GBDT,Day-Ahead (H=24),Test,6696,6.6827,9.2844,78.81,60.29,6042,LGBM_L2_lr05_nl31
+Seasonal Naive (Weekly H=24),Day-Ahead (H=24),Test,6696,7.327,10.5355,79.85,71.2,6042,
+Seasonal Naive (Diurnal H=24),Day-Ahead (H=24),Test,6696,7.3299,10.5951,75.76,69.54,6042,
+Holt-Winters Exponential Smoothing,Day-Ahead (H=24),Test,6696,10.9576,15.1019,148.84,95.83,6042,HW_DampedTrend_AddSeason24
+Persistence (Flat H=24),Day-Ahead (H=24),Test,6696,13.5179,18.132,213.64,83.04,6042,
+Chronos (chronos-t5-tiny),Rolling 1-Step (H=1),Test,6700,3.3335,5.0997,31.28,31.88,6042,chronos_tiny_ctx504
+LightGBM GBDT,Rolling 1-Step (H=1),Test,6700,3.4204,5.1394,33.95,37.11,6042,LGBM_H1_L1_lr05_nl31
+SARIMA,Rolling 1-Step (H=1),Test,6700,3.4759,5.1095,36.29,41.18,6042,"SARIMA(2,0,1)x(0,1,1,24)"
+Persistence (t-1),Rolling 1-Step (H=1),Test,6700,3.5958,5.6712,33.21,30.31,6042,
+Holt-Winters Exponential Smoothing,Rolling 1-Step (H=1),Test,6700,4.12,5.8182,48.32,54.14,6042,HW_DampedTrend_AddSeason24
+Seasonal Naive (t-24),Rolling 1-Step (H=1),Test,6700,7.3256,10.5919,75.76,69.53,6042,
+Seasonal Naive (t-168),Rolling 1-Step (H=1),Test,6700,7.3262,10.5336,79.85,71.27,6042,

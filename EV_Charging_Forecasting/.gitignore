@@ -25,6 +25,7 @@ ENV/
 .env.local
 .env.*.local
 !.env.example
+.env.*
 
 # =============================================================
 # Large Data (raw & processed)
@@ -72,6 +73,7 @@ scratch/
 # =============================================================
 frontend/node_modules/
 frontend/dist/
+node_modules/
 
 # =============================================================
 # IDEs & Editors

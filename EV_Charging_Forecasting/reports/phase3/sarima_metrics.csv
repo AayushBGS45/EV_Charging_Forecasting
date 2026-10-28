@@ -1,0 +1,3 @@
+model,task,split,n_samples,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples,config_name
+SARIMA,Day-Ahead (H=24),Test,6696,5.9097,8.5109,66.4,58.73,6042,"SARIMA(2,0,1)x(0,1,1,24)"
+SARIMA,Rolling 1-Step (H=1),Test,6700,3.4759,5.1095,36.29,41.18,6042,"SARIMA(2,0,1)x(0,1,1,24)"

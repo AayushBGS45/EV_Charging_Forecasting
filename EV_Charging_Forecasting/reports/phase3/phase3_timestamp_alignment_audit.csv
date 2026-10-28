@@ -1,0 +1,11 @@
+task,model,n_timestamps,min_timestamp,max_timestamp,matches_reference_timestamps
+Day-Ahead (H=24),Baseline_v2,6696,2020-03-01 00:00:00+00:00,2020-12-04 23:00:00+00:00,True
+Day-Ahead (H=24),Holt_Winters,6696,2020-03-01 00:00:00+00:00,2020-12-04 23:00:00+00:00,True
+Day-Ahead (H=24),SARIMA,6696,2020-03-01 00:00:00+00:00,2020-12-04 23:00:00+00:00,True
+Day-Ahead (H=24),LightGBM,6696,2020-03-01 00:00:00+00:00,2020-12-04 23:00:00+00:00,True
+Day-Ahead (H=24),Chronos,6696,2020-03-01 00:00:00+00:00,2020-12-04 23:00:00+00:00,True
+Rolling 1-Step (H=1),Baseline_v2,6700,2020-03-01 00:00:00+00:00,2020-12-05 03:00:00+00:00,True
+Rolling 1-Step (H=1),Holt_Winters,6700,2020-03-01 00:00:00+00:00,2020-12-05 03:00:00+00:00,True
+Rolling 1-Step (H=1),SARIMA,6700,2020-03-01 00:00:00+00:00,2020-12-05 03:00:00+00:00,True
+Rolling 1-Step (H=1),LightGBM,6700,2020-03-01 00:00:00+00:00,2020-12-05 03:00:00+00:00,True
+Rolling 1-Step (H=1),Chronos,6700,2020-03-01 00:00:00+00:00,2020-12-05 03:00:00+00:00,True

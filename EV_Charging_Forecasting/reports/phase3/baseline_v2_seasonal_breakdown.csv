@@ -1,0 +1,19 @@
+model,task,period,n_samples,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples
+Persistence (Flat H=24),Day-Ahead (H=24),March–May 2020,2208,11.5366,18.1651,251.15,102.61,1726
+Seasonal Naive (Diurnal H=24),Day-Ahead (H=24),March–May 2020,2208,6.1537,10.755,91.57,93.47,1726
+Seasonal Naive (Weekly H=24),Day-Ahead (H=24),March–May 2020,2208,6.8085,11.272,113.32,100.4,1726
+Persistence (Flat H=24),Day-Ahead (H=24),June–August 2020,2208,12.528,15.6941,186.5,72.86,2161
+Seasonal Naive (Diurnal H=24),Day-Ahead (H=24),June–August 2020,2208,7.4065,9.9663,72.91,59.23,2161
+Seasonal Naive (Weekly H=24),Day-Ahead (H=24),June–August 2020,2208,6.9796,9.4472,66.68,57.85,2161
+Persistence (Flat H=24),Day-Ahead (H=24),September–December 2020,2280,16.3954,20.1858,210.82,73.95,2155
+Seasonal Naive (Diurnal H=24),Day-Ahead (H=24),September–December 2020,2280,8.3949,11.0213,65.94,56.34,2155
+Seasonal Naive (Weekly H=24),Day-Ahead (H=24),September–December 2020,2280,8.1656,10.7936,66.26,55.84,2155
+Persistence (t-1),Rolling 1-Step (H=1),March–May 2020,2208,2.6714,5.1462,39.16,37.11,1726
+Seasonal Naive (t-24),Rolling 1-Step (H=1),March–May 2020,2208,6.1537,10.755,91.57,93.47,1726
+Seasonal Naive (t-168),Rolling 1-Step (H=1),March–May 2020,2208,6.8085,11.272,113.32,100.4,1726
+Persistence (t-1),Rolling 1-Step (H=1),June–August 2020,2208,3.674,5.3731,31.46,27.66,2161
+Seasonal Naive (t-24),Rolling 1-Step (H=1),June–August 2020,2208,7.4065,9.9663,72.91,59.23,2161
+Seasonal Naive (t-168),Rolling 1-Step (H=1),June–August 2020,2208,6.9796,9.4472,66.68,57.85,2161
+Persistence (t-1),Rolling 1-Step (H=1),September–December 2020,2284,4.4139,6.3903,30.2,26.3,2155
+Seasonal Naive (t-24),Rolling 1-Step (H=1),September–December 2020,2284,8.3803,11.0116,65.94,56.33,2155
+Seasonal Naive (t-168),Rolling 1-Step (H=1),September–December 2020,2284,8.1617,10.7877,66.26,56.06,2155
