@@ -1,0 +1,4 @@
+candidate_name,trend,damped_trend,seasonal,seasonal_periods,val_h24_mae_kw,val_h24_rmse_kw,val_h24_mape_pct,val_h24_smape_pct,val_h1_mae_kw,val_h1_rmse_kw,val_h1_mape_pct,val_h1_smape_pct,aic,bic
+HW_NoTrend_AddSeason24,None,False,add,24,17.4698,22.7775,256.43,83.79,5.2869,8.0813,39.13,37.78,52052.56,52249.94
+HW_AddTrend_AddSeason24,add,False,add,24,12.1456,17.3943,129.34,88.84,4.9166,7.0916,39.99,50.48,52585.6,52798.16
+HW_DampedTrend_AddSeason24,add,True,add,24,11.995,17.3621,120.68,92.3,4.9218,7.0814,40.26,52.05,52593.56,52813.71

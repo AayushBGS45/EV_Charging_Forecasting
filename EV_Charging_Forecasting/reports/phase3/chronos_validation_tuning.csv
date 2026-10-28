@@ -1,0 +1,4 @@
+model,context_length_hours,val_mae_kw,val_rmse_kw,val_mape_pct,val_smape_pct
+Chronos (chronos-t5-tiny),168,10.5278,16.5103,104.21,61.79
+Chronos (chronos-t5-tiny),336,9.7434,15.0151,76.09,61.08
+Chronos (chronos-t5-tiny),504,9.1768,14.3892,66.27,58.34

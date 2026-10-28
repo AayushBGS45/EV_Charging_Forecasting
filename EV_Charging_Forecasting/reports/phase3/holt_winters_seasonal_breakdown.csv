@@ -1,0 +1,7 @@
+model,task,period,n_samples,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples
+Holt-Winters Exponential Smoothing,Day-Ahead (H=24),March–May 2020,2208,7.0855,12.3565,124.3,127.37,1726
+Holt-Winters Exponential Smoothing,Day-Ahead (H=24),June–August 2020,2208,14.4303,17.9149,215.57,80.8,2161
+Holt-Winters Exponential Smoothing,Day-Ahead (H=24),September–December 2020,2280,11.3443,14.5303,101.59,79.86,2155
+Holt-Winters Exponential Smoothing,Rolling 1-Step (H=1),March–May 2020,2208,3.4549,5.4525,69.29,82.61,1726
+Holt-Winters Exponential Smoothing,Rolling 1-Step (H=1),June–August 2020,2208,4.2461,5.7469,42.32,41.55,2161
+Holt-Winters Exponential Smoothing,Rolling 1-Step (H=1),September–December 2020,2284,4.641,6.2155,37.53,38.8,2155

@@ -1,0 +1,13 @@
+model,task,split,n_samples,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples
+Persistence (Flat H=24),Day-Ahead (H=24),Validation,1440,28.4104,35.3715,494.39,93.47,1335
+Seasonal Naive (Diurnal H=24),Day-Ahead (H=24),Validation,1440,12.0018,18.2836,92.21,68.18,1335
+Seasonal Naive (Weekly H=24),Day-Ahead (H=24),Validation,1440,11.6263,17.4448,73.62,70.18,1335
+Persistence (Flat H=24),Day-Ahead (H=24),Test,6696,13.5179,18.132,213.64,83.04,6042
+Seasonal Naive (Diurnal H=24),Day-Ahead (H=24),Test,6696,7.3299,10.5951,75.76,69.54,6042
+Seasonal Naive (Weekly H=24),Day-Ahead (H=24),Test,6696,7.327,10.5355,79.85,71.2,6042
+Persistence (t-1),Rolling 1-Step (H=1),Validation,1440,5.5831,9.1484,34.19,30.39,1335
+Seasonal Naive (t-24),Rolling 1-Step (H=1),Validation,1440,12.0018,18.2836,92.21,68.18,1335
+Seasonal Naive (t-168),Rolling 1-Step (H=1),Validation,1440,11.6263,17.4448,73.62,70.18,1335
+Persistence (t-1),Rolling 1-Step (H=1),Test,6700,3.5958,5.6712,33.21,30.31,6042
+Seasonal Naive (t-24),Rolling 1-Step (H=1),Test,6700,7.3256,10.5919,75.76,69.53,6042
+Seasonal Naive (t-168),Rolling 1-Step (H=1),Test,6700,7.3262,10.5336,79.85,71.27,6042

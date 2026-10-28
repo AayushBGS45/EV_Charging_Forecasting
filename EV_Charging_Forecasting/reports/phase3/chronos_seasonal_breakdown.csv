@@ -1,0 +1,7 @@
+model,task,period,n_samples,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples
+Chronos (chronos-t5-tiny),Day-Ahead (H=24),March–May 2020,2208,5.2262,9.5646,70.94,89.99,1726
+Chronos (chronos-t5-tiny),Day-Ahead (H=24),June–August 2020,2208,5.7468,7.8176,52.7,47.78,2161
+Chronos (chronos-t5-tiny),Day-Ahead (H=24),September–December 2020,2280,6.6059,8.6789,54.24,46.32,2155
+Chronos (chronos-t5-tiny),Rolling 1-Step (H=1),March–May 2020,2208,2.5051,4.5436,38.92,43.07,1726
+Chronos (chronos-t5-tiny),Rolling 1-Step (H=1),June–August 2020,2208,3.4731,4.9709,29.3,27.09,2161
+Chronos (chronos-t5-tiny),Rolling 1-Step (H=1),September–December 2020,2284,3.9993,5.6959,27.16,25.71,2155

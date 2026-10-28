@@ -1,0 +1,3 @@
+model,task,split,n_samples,mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples,config_name
+Holt-Winters Exponential Smoothing,Day-Ahead (H=24),Test,6696,10.9576,15.1019,148.84,95.83,6042,HW_DampedTrend_AddSeason24
+Holt-Winters Exponential Smoothing,Rolling 1-Step (H=1),Test,6700,4.12,5.8182,48.32,54.14,6042,HW_DampedTrend_AddSeason24

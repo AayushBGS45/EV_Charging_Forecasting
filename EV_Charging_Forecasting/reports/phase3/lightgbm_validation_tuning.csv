@@ -1,0 +1,9 @@
+candidate_name,task,best_iteration,val_mae_kw,val_rmse_kw,val_mape_pct,val_smape_pct,name,objective,learning_rate,num_leaves,min_child_samples,colsample_bytree
+LGBM_L1_lr05_nl31,Day-Ahead (H=24),140,8.2427,12.228,57.46,49.36,LGBM_L1_lr05_nl31,regression_l1,0.05,31,20,0.8
+LGBM_L1_lr03_nl31,Day-Ahead (H=24),519,8.1091,11.9377,56.96,49.45,LGBM_L1_lr03_nl31,regression_l1,0.03,31,20,0.8
+LGBM_L1_lr05_nl15,Day-Ahead (H=24),156,8.342,12.3918,55.82,49.05,LGBM_L1_lr05_nl15,regression_l1,0.05,15,30,0.8
+LGBM_L2_lr05_nl31,Day-Ahead (H=24),169,7.998,11.5197,58.3,49.2,LGBM_L2_lr05_nl31,regression,0.05,31,20,0.8
+LGBM_L2_lr03_nl63,Day-Ahead (H=24),142,8.1723,11.7733,62.15,49.83,LGBM_L2_lr03_nl63,regression,0.03,63,20,0.8
+LGBM_H1_L1_lr05_nl31,Rolling 1-Step (H=1),444,4.2433,6.5787,28.71,29.63,LGBM_H1_L1_lr05_nl31,regression_l1,0.05,31,20,0.8
+LGBM_H1_L1_lr03_nl31,Rolling 1-Step (H=1),389,4.3004,6.6767,29.38,29.07,LGBM_H1_L1_lr03_nl31,regression_l1,0.03,31,20,0.8
+LGBM_H1_L2_lr05_nl31,Rolling 1-Step (H=1),169,4.2737,6.4698,30.27,31.53,LGBM_H1_L2_lr05_nl31,regression,0.05,31,20,0.8

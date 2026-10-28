@@ -1,0 +1,3 @@
+mae_kw,rmse_kw,mape_filtered_pct,smape_pct,mape_evaluated_samples,total_samples,model,task,split,config_name
+6.6827,9.2844,78.81,60.29,6042,6696,LightGBM GBDT,Day-Ahead (H=24),Test,LGBM_L2_lr05_nl31
+3.4204,5.1394,33.95,37.11,6042,6700,LightGBM GBDT,Rolling 1-Step (H=1),Test,LGBM_H1_L1_lr05_nl31
