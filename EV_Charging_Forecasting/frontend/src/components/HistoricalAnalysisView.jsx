@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'recharts';
 import { fetchDiurnalProfile, fetchStationarity, fetchRecentSessions } from '../services/api';
+import WeeklyDemandChart from './WeeklyDemandChart';
 import { AlertCircle, CheckCircle2, TrendingDown, Clock, Loader2 } from 'lucide-react';
 
 export default function HistoricalAnalysisView() {
@@ -119,6 +120,9 @@ export default function HistoricalAnalysisView() {
           </ResponsiveContainer>
         </div>
       </section>
+
+      {/* Macro Weekly Demand & Regime Shift Analysis */}
+      <WeeklyDemandChart />
 
       {/* Stationarity Tests (ADF and KPSS) */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4">

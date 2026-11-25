@@ -64,3 +64,33 @@ export async function fetchRecentSessions(limit = 10) {
   return handleResponse(res);
 }
 
+export async function fetchEvaluationComparison({ originDate, days = 7 } = {}) {
+  const query = new URLSearchParams();
+  if (originDate) query.append('origin_date', originDate);
+  if (days) query.append('days', days);
+  const qs = query.toString();
+  const res = await fetch(`${API_BASE}/api/evaluation/comparison${qs ? `?${qs}` : ''}`);
+  return handleResponse(res);
+}
+
+export async function fetchEvaluationResiduals({ model = 'sarima', bins = 20, recentDays = 14 } = {}) {
+  const query = new URLSearchParams();
+  if (model) query.append('model', model);
+  if (bins) query.append('bins', bins);
+  if (recentDays) query.append('recent_days', recentDays);
+  const qs = query.toString();
+  const res = await fetch(`${API_BASE}/api/evaluation/residuals${qs ? `?${qs}` : ''}`);
+  return handleResponse(res);
+}
+
+export async function fetchWeeklyDemand(limit = 104) {
+  const res = await fetch(`${API_BASE}/api/demand/weekly?limit=${limit}`);
+  return handleResponse(res);
+}
+
+export async function fetchCapAuditComparison() {
+  const res = await fetch(`${API_BASE}/api/audit/cap-comparison`);
+  return handleResponse(res);
+}
+
+

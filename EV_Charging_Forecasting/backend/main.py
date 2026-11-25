@@ -36,6 +36,36 @@ app.add_middleware(
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 PROCESSED_V2_DIR = PROJECT_ROOT / "data" / "processed_v2"
+PHASE3_REPORTS_DIR = PROJECT_ROOT / "reports" / "phase3"
+
+
+@lru_cache(maxsize=1)
+def load_h24_comparison_data() -> pd.DataFrame:
+    """Loads and caches test set Day-Ahead H=24 predictions for SARIMA and Chronos."""
+    sarima_path = PHASE3_REPORTS_DIR / "sarima_h24_predictions.parquet"
+    chronos_path = PHASE3_REPORTS_DIR / "chronos_h24_predictions.parquet"
+    if not sarima_path.exists():
+        raise FileNotFoundError("SARIMA H=24 test predictions artifact not found.")
+
+    df_s = pd.read_parquet(sarima_path)
+    df_s["timestamp"] = pd.to_datetime(df_s["timestamp"], utc=True)
+    df_s["origin_timestamp"] = pd.to_datetime(df_s["origin_timestamp"], utc=True)
+
+    if chronos_path.exists():
+        df_c = pd.read_parquet(chronos_path)
+        df_c["timestamp"] = pd.to_datetime(df_c["timestamp"], utc=True)
+        df_c["origin_timestamp"] = pd.to_datetime(df_c["origin_timestamp"], utc=True)
+        merged = pd.merge(
+            df_s,
+            df_c[["origin_timestamp", "timestamp", "step", "pred_chronos"]],
+            on=["origin_timestamp", "timestamp", "step"],
+            how="left",
+        )
+    else:
+        merged = df_s.copy()
+        merged["pred_chronos"] = np.nan
+
+    return merged.sort_values(["origin_timestamp", "step"]).reset_index(drop=True)
 
 
 @lru_cache(maxsize=1)
@@ -137,9 +167,13 @@ def read_root():
             "stats": "/api/stats",
             "hourly_demand": "/api/demand/hourly",
             "diurnal_profile": "/api/demand/diurnal",
+            "weekly_demand": "/api/demand/weekly",
             "stationarity_tests": "/api/demand/stationarity",
             "recent_sessions": "/api/sessions/recent",
             "forecast": "/api/forecast?horizon=24",
+            "evaluation_comparison": "/api/evaluation/comparison",
+            "evaluation_residuals": "/api/evaluation/residuals",
+            "cap_audit_comparison": "/api/audit/cap-comparison",
         },
     }
 
@@ -375,4 +409,272 @@ def get_forecast(
         "unit": "kW",
         "forecast_origin": origin_str,
         "predictions": predictions,
+    }
+
+
+@app.get("/api/evaluation/comparison")
+def get_evaluation_comparison(
+    origin_date: Optional[str] = Query(None, description="Select origin date YYYY-MM-DD or ISO timestamp"),
+    days: int = Query(7, ge=1, le=30, description="Recent forecast days to return if origin_date is not set"),
+):
+    """
+    Returns actual charging demand vs. SARIMA and Chronos predictions on the holdout test set (2020).
+    Allows comparing actual vs predicted trajectories for day-ahead forecasts.
+    """
+    try:
+        df = load_h24_comparison_data()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+
+    available_origins = [
+        ts.strftime("%Y-%m-%d") for ts in sorted(df["origin_timestamp"].unique())
+    ]
+    unique_origin_dates = list(dict.fromkeys(available_origins))
+
+    has_origin = isinstance(origin_date, str) and bool(origin_date.strip())
+
+    if has_origin:
+        target_origin = pd.to_datetime(origin_date, utc=True)
+        mask = df["origin_timestamp"].dt.date == target_origin.date()
+        subset = df[mask]
+        if subset.empty:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Origin date '{origin_date}' not found in test predictions (available: {unique_origin_dates[0]} to {unique_origin_dates[-1]}).",
+            )
+        selected_origin_str = subset["origin_timestamp"].iloc[0].strftime("%Y-%m-%dT%H:%M:%SZ")
+    else:
+        recent_origins = df["origin_timestamp"].unique()[-days:]
+        subset = df[df["origin_timestamp"].isin(recent_origins)]
+        selected_origin_str = subset["origin_timestamp"].iloc[-1].strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    actuals = subset["avg_power_kw"].values
+    sarima_preds = subset["pred_sarima"].values
+    chronos_preds = subset["pred_chronos"].values
+
+    sarima_diff = actuals - sarima_preds
+    sarima_mae = round(float(np.mean(np.abs(sarima_diff))), 2)
+    sarima_rmse = round(float(np.sqrt(np.mean(sarima_diff**2))), 2)
+
+    has_chronos = not np.all(np.isnan(chronos_preds))
+    if has_chronos:
+        chronos_diff = actuals - chronos_preds
+        chronos_mae = round(float(np.mean(np.abs(chronos_diff))), 2)
+        chronos_rmse = round(float(np.sqrt(np.mean(chronos_diff**2))), 2)
+    else:
+        chronos_mae = None
+        chronos_rmse = None
+
+    series = [
+        {
+            "timestamp": row["timestamp"].strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "origin_timestamp": row["origin_timestamp"].strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "step": int(row["step"]),
+            "actual_kw": round(float(row["avg_power_kw"]), 2),
+            "sarima_kw": round(float(row["pred_sarima"]), 2),
+            "chronos_kw": round(float(row["pred_chronos"]), 2) if pd.notna(row["pred_chronos"]) else None,
+            "sarima_residual_kw": round(float(row["avg_power_kw"] - row["pred_sarima"]), 2),
+            "chronos_residual_kw": round(float(row["avg_power_kw"] - row["pred_chronos"]), 2) if pd.notna(row["pred_chronos"]) else None,
+        }
+        for _, row in subset.iterrows()
+    ]
+
+    return {
+        "count": len(series),
+        "selected_origin": selected_origin_str,
+        "is_single_origin": has_origin,
+        "metrics": {
+            "sarima_mae_kw": sarima_mae,
+            "sarima_rmse_kw": sarima_rmse,
+            "chronos_mae_kw": chronos_mae,
+            "chronos_rmse_kw": chronos_rmse,
+        },
+        "available_origin_dates": unique_origin_dates,
+        "series": series,
+    }
+
+
+@app.get("/api/evaluation/residuals")
+def get_evaluation_residuals(
+    model: str = Query("sarima", description="Model identifier: 'sarima' or 'chronos'"),
+    bins: int = Query(20, ge=5, le=50, description="Number of histogram bins"),
+    recent_days: int = Query(14, ge=1, le=90, description="Recent test days to include in residual time series"),
+):
+    """
+    Computes residual errors (e_t = actual - predicted) across test set observations,
+    returning summary error metrics, a binned distribution histogram, and time series residuals.
+    """
+    try:
+        df = load_h24_comparison_data()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+
+    pred_col = "pred_sarima" if model.lower() == "sarima" else "pred_chronos"
+    if pred_col not in df.columns:
+        raise HTTPException(status_code=400, detail=f"Model '{model}' not recognized.")
+
+    valid_df = df.dropna(subset=["avg_power_kw", pred_col])
+    actuals = valid_df["avg_power_kw"].values
+    preds = valid_df[pred_col].values
+    residuals = actuals - preds
+
+    mean_error = round(float(np.mean(residuals)), 3)
+    mae = round(float(np.mean(np.abs(residuals))), 3)
+    rmse = round(float(np.sqrt(np.mean(residuals**2))), 3)
+    std_error = round(float(np.std(residuals)), 3)
+    min_error = round(float(np.min(residuals)), 2)
+    max_error = round(float(np.max(residuals)), 2)
+
+    counts, bin_edges = np.histogram(residuals, bins=bins)
+    total_samples = len(residuals)
+    histogram = []
+    for i in range(len(counts)):
+        b_low = round(float(bin_edges[i]), 2)
+        b_high = round(float(bin_edges[i + 1]), 2)
+        histogram.append({
+            "bin_range": f"{b_low} to {b_high} kW",
+            "bin_center": round((b_low + b_high) / 2.0, 2),
+            "bin_min": b_low,
+            "bin_max": b_high,
+            "count": int(counts[i]),
+            "percentage": round(float(counts[i] / total_samples * 100), 2),
+        })
+
+    recent_origins = valid_df["origin_timestamp"].unique()[-recent_days:]
+    recent_df = valid_df[valid_df["origin_timestamp"].isin(recent_origins)]
+    time_series = [
+        {
+            "timestamp": row["timestamp"].strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "actual_kw": round(float(row["avg_power_kw"]), 2),
+            "pred_kw": round(float(row[pred_col]), 2),
+            "residual_kw": round(float(row["avg_power_kw"] - row[pred_col]), 2),
+            "abs_error_kw": round(float(abs(row["avg_power_kw"] - row[pred_col])), 2),
+        }
+        for _, row in recent_df.iterrows()
+    ]
+
+    return {
+        "model": model.upper(),
+        "sample_count": total_samples,
+        "statistics": {
+            "mean_error_kw": mean_error,
+            "mae_kw": mae,
+            "rmse_kw": rmse,
+            "std_error_kw": std_error,
+            "min_error_kw": min_error,
+            "max_error_kw": max_error,
+        },
+        "histogram": histogram,
+        "recent_series": time_series,
+    }
+
+
+@app.get("/api/demand/weekly")
+def get_weekly_demand_trends(
+    limit: int = Query(104, ge=1, le=300, description="Max weekly records (default 104 = 2 years)"),
+):
+    """
+    Returns weekly aggregated demand (total energy, average power, peak load)
+    to visualize macro-level non-stationary trends across the entire multi-year timeline.
+    """
+    try:
+        df = load_hourly_demand_v2()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+
+    df_clean = df.copy()
+    df_clean["timestamp"] = pd.to_datetime(df_clean["timestamp"], utc=True)
+    df_clean = df_clean.sort_values("timestamp")
+
+    weekly = (
+        df_clean.set_index("timestamp")
+        .resample("W-MON")
+        .agg({
+            "avg_power_kw": ["mean", "max"],
+            "energy_delivered_kwh": "sum",
+        })
+        .dropna()
+    )
+
+    weekly.columns = ["mean_power_kw", "peak_power_kw", "total_energy_kwh"]
+    weekly = weekly.reset_index().tail(limit)
+
+    pre_covid = weekly[weekly["timestamp"] < "2020-03-01"]
+    lockdown = weekly[(weekly["timestamp"] >= "2020-03-01") & (weekly["timestamp"] <= "2020-05-31")]
+    recovery = weekly[weekly["timestamp"] > "2020-05-31"]
+
+    pre_mean = round(float(pre_covid["total_energy_kwh"].mean()), 2) if not pre_covid.empty else 0.0
+    lockdown_mean = round(float(lockdown["total_energy_kwh"].mean()), 2) if not lockdown.empty else 0.0
+    recovery_mean = round(float(recovery["total_energy_kwh"].mean()), 2) if not recovery.empty else 0.0
+
+    records = [
+        {
+            "week_start": row["timestamp"].strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "week_label": row["timestamp"].strftime("%b %d, %Y"),
+            "total_energy_kwh": round(float(row["total_energy_kwh"]), 2),
+            "mean_power_kw": round(float(row["mean_power_kw"]), 2),
+            "peak_power_kw": round(float(row["peak_power_kw"]), 2),
+        }
+        for _, row in weekly.iterrows()
+    ]
+
+    return {
+        "count": len(records),
+        "facility": "Caltech Adaptive Charging Network",
+        "regime_averages_kwh": {
+            "pre_covid_weekly_kwh": pre_mean,
+            "lockdown_weekly_kwh": lockdown_mean,
+            "recovery_weekly_kwh": recovery_mean,
+        },
+        "data": records,
+    }
+
+
+@app.get("/api/audit/cap-comparison")
+def get_cap_comparison_audit():
+    """
+    Returns empirical comparison of demand statistics before and after applying the
+    provisional 7.7 kW per-session physical delivery cap during v2 preprocessing.
+    """
+    try:
+        df_v1 = load_hourly_demand()
+        df_v2 = load_hourly_demand_v2()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+
+    diff = df_v1["avg_power_kw"] - df_v2["avg_power_kw"]
+    affected_count = int((diff > 0.05).sum())
+
+    v1_max = round(float(df_v1["avg_power_kw"].max()), 2)
+    v2_max = round(float(df_v2["avg_power_kw"].max()), 2)
+    v1_mean = round(float(df_v1["avg_power_kw"].mean()), 2)
+    v2_mean = round(float(df_v2["avg_power_kw"].mean()), 2)
+    v1_std = round(float(df_v1["avg_power_kw"].std()), 2)
+    v2_std = round(float(df_v2["avg_power_kw"].std()), 2)
+
+    v1_energy = round(float(df_v1["energy_delivered_kwh"].sum()), 2)
+    v2_energy = round(float(df_v2["energy_delivered_kwh"].sum()), 2)
+    energy_diff_pct = round(float((v1_energy - v2_energy) / v1_energy * 100), 2)
+
+    return {
+        "target_variable": "avg_power_kw (reconstructed hourly energy allocation; not instantaneous physical power)",
+        "v1_uncapped": {
+            "max_power_kw": v1_max,
+            "mean_power_kw": v1_mean,
+            "std_power_kw": v1_std,
+            "total_energy_kwh": v1_energy,
+        },
+        "v2_capped": {
+            "max_power_kw": v2_max,
+            "mean_power_kw": v2_mean,
+            "std_power_kw": v2_std,
+            "total_energy_kwh": v2_energy,
+        },
+        "impact": {
+            "peak_reduction_kw": round(v1_max - v2_max, 2),
+            "energy_reduction_pct": energy_diff_pct,
+            "affected_intervals": affected_count,
+            "justification": "Level 2 EVSE maximum delivery rating is 32A @ 240V = 7.68 kW (~7.7 kW). A single charging connection cannot physically deliver >7.7 kW on standard J1772 hardware. The uncapped 375.4 kW spikes resulted from unreset cumulative hardware meters during session disconnects.",
+            "validation_status": "Provisional — empirically validated to suppress unphysical carryover spikes without altering normal diurnal profiles.",
+        },
     }

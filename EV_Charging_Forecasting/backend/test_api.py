@@ -36,6 +36,10 @@ from main import (
     get_diurnal_profile,
     get_stationarity_diagnostics,
     get_recent_sessions,
+    get_evaluation_comparison,
+    get_evaluation_residuals,
+    get_weekly_demand_trends,
+    get_cap_comparison_audit,
 )
 
 
@@ -154,6 +158,55 @@ def test_forecast_invalid_horizons():
             assert exc.status_code == 422, f"Expected status_code 422 for horizon={invalid_h}, got {exc.status_code}"
 
 
+def test_evaluation_comparison_endpoint():
+    """Verify actual vs predicted comparison endpoint."""
+    res = get_evaluation_comparison(origin_date=None, days=3)
+    assert res["count"] == 3 * 24
+    assert "metrics" in res
+    assert "sarima_mae_kw" in res["metrics"]
+    assert "chronos_mae_kw" in res["metrics"]
+    assert len(res["series"]) == 3 * 24
+    sample = res["series"][0]
+    assert "actual_kw" in sample
+    assert "sarima_kw" in sample
+    assert "chronos_kw" in sample
+    assert "timestamp" in sample
+
+
+def test_evaluation_residuals_endpoint():
+    """Verify residual distribution and error statistics endpoint."""
+    res = get_evaluation_residuals(model="sarima", bins=15, recent_days=5)
+    assert res["model"] == "SARIMA"
+    assert res["sample_count"] == 6696
+    stats = res["statistics"]
+    assert stats["mae_kw"] > 0
+    assert stats["rmse_kw"] > 0
+    assert len(res["histogram"]) == 15
+    assert len(res["recent_series"]) == 5 * 24
+
+
+def test_weekly_demand_endpoint():
+    """Verify weekly demand macro trends endpoint."""
+    res = get_weekly_demand_trends(limit=52)
+    assert res["count"] <= 52
+    assert "regime_averages_kwh" in res
+    assert len(res["data"]) > 0
+    wk = res["data"][0]
+    assert "week_start" in wk
+    assert "total_energy_kwh" in wk
+    assert "mean_power_kw" in wk
+
+
+def test_cap_comparison_audit_endpoint():
+    """Verify 7.7 kW physical cap comparison audit endpoint."""
+    res = get_cap_comparison_audit()
+    assert "v1_uncapped" in res
+    assert "v2_capped" in res
+    assert "impact" in res
+    assert res["v1_uncapped"]["max_power_kw"] > res["v2_capped"]["max_power_kw"]
+    assert res["impact"]["peak_reduction_kw"] > 200.0
+
+
 def run_all_tests():
     """Executes all tests with latency measurement and clear reporting."""
     tests = [
@@ -164,6 +217,10 @@ def run_all_tests():
         test_forecast_horizon_1,
         test_forecast_horizon_168,
         test_forecast_invalid_horizons,
+        test_evaluation_comparison_endpoint,
+        test_evaluation_residuals_endpoint,
+        test_weekly_demand_endpoint,
+        test_cap_comparison_audit_endpoint,
     ]
 
     print(f"[*] Starting Focused Backend & Forecast Test Suite ({len(tests)} tests)...", flush=True)

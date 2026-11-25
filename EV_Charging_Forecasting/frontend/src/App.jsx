@@ -4,6 +4,8 @@ import Header from './components/Header';
 import SummaryCards from './components/SummaryCards';
 import ForecastChart from './components/ForecastChart';
 import ModelComparison from './components/ModelComparison';
+import ActualVsPredictedChart from './components/ActualVsPredictedChart';
+import ResidualAnalysisView from './components/ResidualAnalysisView';
 import DemandForecastView from './components/DemandForecastView';
 import HistoricalAnalysisView from './components/HistoricalAnalysisView';
 import DataAuditView from './components/DataAuditView';
@@ -12,6 +14,7 @@ import { AlertTriangle, Server, ExternalLink } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [perfSubTab, setPerfSubTab] = useState('all');
   const [horizon, setHorizon] = useState(24);
   const [forecastData, setForecastData] = useState(null);
   const [stats, setStats] = useState(null);
@@ -147,7 +150,64 @@ export default function App() {
 
           {activeTab === 'performance' && (
             <div className="flex flex-col gap-6">
-              <ModelComparison />
+              {/* Performance Sub-navigation Pills */}
+              <div className="flex items-center gap-2 p-1.5 rounded-xl bg-surface-container-lowest border border-outline-variant w-fit text-xs font-label">
+                <button
+                  onClick={() => setPerfSubTab('all')}
+                  className={`px-3 py-1.5 rounded-lg transition-colors ${
+                    perfSubTab === 'all'
+                      ? 'bg-primary text-on-primary font-bold'
+                      : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  All Performance Views
+                </button>
+                <button
+                  onClick={() => setPerfSubTab('benchmarks')}
+                  className={`px-3 py-1.5 rounded-lg transition-colors ${
+                    perfSubTab === 'benchmarks'
+                      ? 'bg-primary text-on-primary font-bold'
+                      : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  Model Benchmarks
+                </button>
+                <button
+                  onClick={() => setPerfSubTab('trajectories')}
+                  className={`px-3 py-1.5 rounded-lg transition-colors ${
+                    perfSubTab === 'trajectories'
+                      ? 'bg-primary text-on-primary font-bold'
+                      : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  Actual vs Predicted (Test Set)
+                </button>
+                <button
+                  onClick={() => setPerfSubTab('residuals')}
+                  className={`px-3 py-1.5 rounded-lg transition-colors ${
+                    perfSubTab === 'residuals'
+                      ? 'bg-primary text-on-primary font-bold'
+                      : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  Residual Error Analysis
+                </button>
+              </div>
+
+              {/* Model Comparison Benchmark Cards */}
+              {(perfSubTab === 'all' || perfSubTab === 'benchmarks') && (
+                <ModelComparison />
+              )}
+
+              {/* Actual vs Predicted Time Series Chart on Test Set */}
+              {(perfSubTab === 'all' || perfSubTab === 'trajectories') && (
+                <ActualVsPredictedChart />
+              )}
+
+              {/* Residual Distribution & Diagnostics */}
+              {(perfSubTab === 'all' || perfSubTab === 'residuals') && (
+                <ResidualAnalysisView />
+              )}
             </div>
           )}
 
